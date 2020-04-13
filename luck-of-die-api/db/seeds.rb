@@ -8,14 +8,13 @@
 
 User.destroy_all
 Board.destroy_all
+Cup.destroy_all
 
-User.create(username: "Apple", points: 10)
-User.create(username: "Pan", points: 10)
-User.create(username: "Po", points: 10)
+User.create(username: "Apple")
+User.create(username: "Pan")
+User.create(username: "Po")
 
 
 Board.create(color: "green", difficulty: "easy")
 Board.create(color: "yello", difficulty: "medium")
 Board.create(color: "red", difficulty: "hard")
-
-Cup.create(dice: 0, has_won: false)
