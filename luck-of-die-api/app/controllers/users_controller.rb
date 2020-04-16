@@ -3,13 +3,13 @@ class UsersController < ApplicationController
     def index
         users = User.all
 
-        render json: users
+        render json: users.sort_by {|user| user.points}.reverse, include: [:cups]
     end
 
     def show
         user = User.find(params[:id])
 
-        render json: user
+        render json: user, include: [:cups]
     end
 
     def create
@@ -17,38 +17,56 @@ class UsersController < ApplicationController
             username: params[:username]
         )
 
-        render json: user
+        render json: user, include: [:cups]
     end
 
-    def won
+#===============================================================
+
+    def wonE
         user = User.find(params[:id])
-        user.boards.map do |board|
-            if board.difficulty === "easy"
-                user.update(points: user.points + 1)
-            elsif board.difficulty === "medium"
-                user.update(points: user.points + 3)
-            elsif board.difficulty === "hard"
-                user.update(points: user.points + 5)
-            end
-        end
+        user.update(points: user.points + 1)
 
-        render json: user
+        render json: user, include: [:cups]
     end
 
-    def lost
+    def lostE
         user = User.find(params[:id])
-        user.boards.map do |board|
-            if board.difficulty === "easy"
-                user.update(points: user.points - 1)
-            elsif board.difficulty === "medium"
-                user.update(points: user.points - 3)
-            elsif board.difficulty === "hard"
-                user.update(points: user.points - 5)
-            end
-        end
+        user.update(points: user.points - 1)
 
-        render json: user
+        render json: user, include: [:cups]
     end
+
+#===============================================================
+
+    def wonM
+        user = User.find(params[:id])
+        user.update(points: user.points + 10)
+
+        render json: user, include: [:cups]
+    end
+    def lostM
+        user = User.find(params[:id])
+        user.update(points: user.points - 10)
+
+        render json: user, include: [:cups]
+    end
+
+#===============================================================
+
+def wonH
+    user = User.find(params[:id])
+    user.update(points: user.points + 25)
+
+    render json: user, include: [:cups]
+end
+def lostH
+    user = User.find(params[:id])
+    user.update(points: 0)
+
+    render json: user, include: [:cups]
+end
+
+#===============================================================
 
     def destroy
         user = User.find(params[:id])

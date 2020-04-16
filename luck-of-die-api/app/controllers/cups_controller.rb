@@ -13,7 +13,7 @@ class CupsController < ApplicationController
 
     def create
 
-        cup = Cup.find_or_create_by(
+        cup = Cup.create(
             dice: params[:dice],
             user_id: params[:user_id],
             board_id: params[:board_id],

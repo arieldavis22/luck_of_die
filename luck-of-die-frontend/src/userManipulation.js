@@ -2,19 +2,23 @@
 function fetchUsers() {
     getUserData()  //fetch
     .then(userData => {
-        renderUsers(userData)
-        createOrFindUser(userData)
+        renderUsers(userData) //leaderboard
+        createOrFindUser(userData) //form to find or create user
     })
     
 }
 
-//render users names in an unordered list
+//render users names in an ordered list
+//leaderboard
 function renderUsers(userData) {
-    userData.forEach(user => {
-        userLi = document.createElement("li")
-        userLi.innerText = user.username
+    leaderboardUl.innerHTML = ""
+    userData.slice(0, 5).forEach(user => { //show first 5 users and show their username: points
+        userLi = document.createElement("p")
+        userLi.innerText = `
+        ${user.username}: ${user.points}
+        `
 
-        allUserList.append(userLi)
+        leaderboardUl.append(userLi)
     })
 }
 
@@ -25,19 +29,19 @@ function createOrFindUser(userData) {
         e.preventDefault()
         
         userData.forEach(user => {
-            if(e.target.name.value === user.username) {
+            if(e.target.name.value === user.username) { //if what the user inputs is a username in the database return that info
                 return renderUserInfo(user)
             }
         })
-        renderNewUser(e)
+        renderNewUser(e) //if the username isnt found in the database, create a new user
         e.target.reset()
     })
 }
 
-function renderNewUser(e) {
+function renderNewUser(e) { //makes a new user and renders that new users default info
     getNewUserData(e) //fetch
     .then(newUser => {
-        renderUserInfo(newUser)
+        renderUserInfo(newUser) 
     })
 }
 
@@ -45,6 +49,8 @@ function renderNewUser(e) {
 function renderUserInfo(user) {
     main.innerHTML = ""
     main.innerHTML = `
+    <div id="won" class="hide">You won</div>
+    <div id="lost" class="hide">You lost</div>
     <h1>Welcome ${user.username}</h1>
     <h3>You have ${user.points} points</h3>
     `
@@ -53,7 +59,7 @@ function renderUserInfo(user) {
     userPlayBtn.innerText = "Click Here To Play"
 
     userPlayBtn.addEventListener("click", () => {
-        fetchBoards(user)
+        fetchBoards(user) //event to fetch board data and display boards(boardManupulation.js)
     })
 
     main.append(userPlayBtn)
@@ -64,6 +70,7 @@ function updateUserWon(newCup) {
     updateUserWin(newCup) //fetch
     .then(newUserData => {
         renderUserInfo(newUserData)
+        userWonMessage()
         destoryCup(newCup)
     })
 }
@@ -73,6 +80,7 @@ function updateUserLost(newCup) {
         //if users points are 0 or less destory that user
         if(newUserData.points > 0){
             renderUserInfo(newUserData)
+            userLostMessage()
             destoryCup(newCup)
         } else {
             removeUser(newUserData)
@@ -81,6 +89,7 @@ function updateUserLost(newCup) {
     })
 }
 
+
 //remove user from database
 function removeUser(newUserData) {
     removeUserData(newUserData) //fetch
@@ -88,4 +97,19 @@ function removeUser(newUserData) {
         renderMainMenu()
         fetchUsers()
     })
+}
+
+function userWonMessage() {
+    let userWon = document.querySelector("#won")
+    userWon.classList.remove("hide")
+    setTimeout(() => {
+        userWon.classList.add("hide")
+    }, 3000)
+}
+function userLostMessage() {
+    let userLost = document.querySelector("#lost")
+    userLost.classList.remove("hide")
+    setTimeout(() => {
+        userLost.classList.add("hide")
+    }, 3000)
 }
