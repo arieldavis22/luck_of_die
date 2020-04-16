@@ -25,7 +25,9 @@ function renderUsers(userData) {
 //Use form to see if any username is in the database
 //if not create a new user in the database
 function createOrFindUser(userData) {
+
     createFindUserForm.addEventListener("submit", e => {
+        playDiceAudio()
         e.preventDefault()
         
         userData.forEach(user => {
@@ -59,6 +61,7 @@ function renderUserInfo(user) {
     userPlayBtn.innerText = "Click Here To Play"
 
     userPlayBtn.addEventListener("click", () => {
+        playDiceAudio()
         fetchBoards(user) //event to fetch board data and display boards(boardManupulation.js)
     })
 
@@ -70,6 +73,7 @@ function updateUserWon(newCup) {
     updateUserWin(newCup) //fetch
     .then(newUserData => {
         renderUserInfo(newUserData)
+        playWinAudio()
         userWonMessage()
         destoryCup(newCup)
     })
@@ -80,10 +84,12 @@ function updateUserLost(newCup) {
         //if users points are 0 or less destory that user
         if(newUserData.points > 0){
             renderUserInfo(newUserData)
+            playLoseAudio()
             userLostMessage()
             destoryCup(newCup)
         } else {
             removeUser(newUserData)
+            playLoseAudio()
             destoryCup(newCup)
         }
     })

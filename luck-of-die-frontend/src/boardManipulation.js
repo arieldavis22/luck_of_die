@@ -29,4 +29,12 @@ function renderBoards(user, boardData) {
         })
         main.append(boardBtn)
     })
+    let modeDesc = document.createElement("p")
+    modeDesc.id = "modes"
+    modeDesc.innerHTML= `
+    Easy: Guess if the single dice rolled is even or odd.<br>
+    Medium: Guess the numbers of the 2 die rolled. (order doesnt matter)<br>
+    Hard: Guess the numbers of the 3 die rolled and the order they were rolled in.
+    `
+    main.append(modeDesc)
 }

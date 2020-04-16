@@ -19,18 +19,51 @@ function renderAskEvenOdd(newCup) {//render form that ask user if dice is even o
 
     main.innerHTML = ""
 
+    let imgFile;
+    switch(newCup.dice) { //use dice depending on which dice is rolled
+        case 1:
+            imgFile = "lod_dice_1.png"
+            break;
+        case 2:
+            imgFile = "lod_dice_2.png"
+            break;
+        case 3:
+            imgFile = "lod_dice_3.png"
+            break;
+        case 4:
+            imgFile = "lod_dice_4.png"
+            break;
+        case 5:
+            imgFile = "lod_dice_5.png"
+            break;
+        case 6:
+            imgFile = "lod_dice_6.png"
+        break;
+
+    } 
+    console.log(newCup.dice)
+    let cupImgDisplay = document.createElement("div")
+    cupImgDisplay.innerHTML = `
+    <img class="dice" src="img/${imgFile}" width="30" height="30">
+    <img id="cup_id" class="cup" src="img/lod_cup.png" width="80" height="100">
+    `
+
     let askCupForm = document.createElement("form")
     askCupForm.innerHTML = `
     <input type="radio" name="choice" value="even"> Even
     <input type="radio" name="choice" value="odd"> Odd
     <input type="submit" name="submit" value="Pick">
     `
-
+    let cupInDiv = cupImgDisplay.querySelector("#cup_id")
     askCupForm.addEventListener("submit", (e) => {
-        renderCorrectorNot(e, newCup) //form submit event
+        e.preventDefault()
+        cupInDiv.classList.add("fade-out")//add fadeout to cup
+        setTimeout(function() {
+            renderCorrectorNot(e, newCup) //form submit event
+        }, 2500)
     })
 
-    main.append(askCupForm)
+    main.append(cupImgDisplay, askCupForm)
 }
 
 function renderCorrectorNot(e, newCup) {
@@ -119,6 +152,7 @@ function guessEvent(e, user, allDie) {
         updateUserWinM(user)
         .then(newUserInfo => {
             renderUserInfo(newUserInfo) //render updated user info
+            playWinAudio()
             userWonMessage() //render user won message (from userManipulation.js)
         })
     } else {
@@ -128,9 +162,11 @@ function guessEvent(e, user, allDie) {
         .then(newUserInfo => {
         if(newUserInfo.points > 0){
             renderUserInfo(newUserInfo) //fetch
+            playLoseAudio()
             userLostMessage()//render user lost message (from userManipulation.js)
         } else {
             removeUser(newUserInfo) //fetch
+            playLoseAudio()
         }
         })
     }
@@ -191,6 +227,7 @@ function guessEventH(e, user, allDie) {
         updateUserWinH(user)
         .then(newUserInfo => {
             renderUserInfo(newUserInfo) //fetch
+            playWinAudio()
             userWonMessage()
         })
     } else {
@@ -200,9 +237,11 @@ function guessEventH(e, user, allDie) {
         .then(newUserInfo => {
         if(newUserInfo.points > 0){
             renderUserInfo(newUserInfo) //fetch
+            playLoseAudio()
             userLostMessage()
         } else {
             removeUser(newUserInfo) //fetch
+            playLoseAudio()
         }
         })
     }
