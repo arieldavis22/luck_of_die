@@ -1,1 +1,3 @@
-# luck_of_die
+# Luck Of Die
+
+A small web based game that tests the luck of the user!
